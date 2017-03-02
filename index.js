@@ -177,6 +177,11 @@ function parseStyles(
   return Promise.resolve(statements).then(promiseEach(function(stmt) {
     stmt.media = joinMedia(media, stmt.media || [])
 
+    if (stmt.type === "import") {
+      if (/^url\(/.exec(stmt.fullUri)) {
+        return
+      }
+    }
     // skip protocol base uri (protocol://url) or protocol-relative
     if (stmt.type !== "import" || /^(?:[a-z]+:)?\/\//i.test(stmt.uri)) {
       return
